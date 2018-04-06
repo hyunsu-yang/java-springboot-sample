@@ -1,4 +1,4 @@
-package com.yhs.async.completablefuture.hello;
+package com.yhs.async.completablefuture.lookupurl;
 
 import java.util.concurrent.Executor;
 

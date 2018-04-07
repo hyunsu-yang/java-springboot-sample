@@ -19,5 +19,7 @@ class MyThreadTask implements Runnable {
 
 	public MyThreadTask() {
 		this.id = ++count;
+		// ThreadPool을  사용할 필요 없고 Task 생성과 동시에 바로 실행을 위해 아래와 같은 방법도 가능
+		//new Thread(this).start();
 	}
 }

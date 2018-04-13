@@ -14,7 +14,56 @@ import org.junit.Test;
  2. boilerplate 코드 없이 바로 CompletableFuture 에 연산 로직을 넣어주는 방법 (runAsync, supplyAsync)
  */
 public class CompletableFutureHowToCreateTest {
-
+	
+	/*
+	 만약 Consumer 로 보낼 값을 바로 알고 있다면 Future 생성 동시에 바로 값을 넣어줄 수 있다. 이 때 get 메소드에서는 Blocking 되는 일 없이 바로 값을 가져온다. 
+	 */	
+	@Test
+	public void completedFutureHelloTest() throws Exception {
+		 CompletableFuture<String> completableFuture = new CompletableFuture<>();
+		 
+		 completableFuture.complete("Hello");
+		String result = completableFuture.get();
+		
+		assertEquals("Hello", result);
+	}
+	
+	/*
+	 CompletableFuture.completedFuture() 하지 않으면 계속 영원히 bloking 된다.
+	 */
+	@Test
+	public void completedFutureHello2Test() throws Exception {
+		 CompletableFuture<String> completableFuture = new CompletableFuture<>();
+	 
+		String result = completableFuture.get();
+	}
+	
+	
+	/*
+	  CompletableFuture 생성시 바로 complete 전달하는 케이스
+	  만약 Consumer 로 보낼 값을 바로 알고 있다면 Future 생성 동시에 바로 값을 넣어줄 수 있다. 이 때 get 메소드에서는 Blocking 되는 일 없이 바로 값을 가져온다.
+	 */
+	@Test
+	public void completedFutureHello3Test() throws Exception {
+		Future<String> completableFuture = CompletableFuture.completedFuture("Hello");
+	 
+		String result = completableFuture.get();
+		assertEquals("Hello", result);
+	}	
+		
+	
+	/*
+	  위 예제는 Executor 로 로직을 실행하고 complete 로 결과를 넘겨주는 것을 볼 수 있다. 이런 boilerplate 코드 없이 바로 CompletableFuture 를 만들 수 없을까?
+		runAsync, supplyAsync 메소드로 바로 연산 로직을 넣어줄 수 있다
+	 */
+	@Test
+	public void completedFutureTest3() throws Exception {
+		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
+		 
+		assertEquals("Hello", future.get());
+	}
+	
+	
 	@Test
 	public void test() throws Exception {
 		Future<String> test1 = calculateAsync();
@@ -64,18 +113,6 @@ public class CompletableFutureHowToCreateTest {
 	}
 	
 	/*
-	 만약 Consumer 로 보낼 값을 바로 알고 있다면 Future 생성 동시에 바로 값을 넣어줄 수 있다. 이 때 get 메소드에서는 Blocking 되는 일 없이 바로 값을 가져온다. 
-	 */	
-	@Test
-	public void completedFutureTest() throws Exception {
-		Future<String> completableFuture = CompletableFuture.completedFuture("Hello");
-	 
-		String result = completableFuture.get();
-		assertEquals("Hello", result);
-	}
-	
-	
-	/*
 	 Future 실행을 cancel 하는 경우도 있다. 이는 Future 의 cancel 메소드를 호출한 경우인데 
 	 이 상황에서 comsumer 쪽에서 get 메소드를 호출하면 CancellationException 을 Throw 한다. 
 	 참고로 cancel 메소드는 mayInterruptIfRunning 라는 Boolean 인자를 받는데 CompetableFuture 에서는 Ture 이든 False 이든 아무 영향이 없다. 
@@ -91,16 +128,7 @@ public class CompletableFutureHowToCreateTest {
 	 
 	    return completableFuture;
 	}
-
 	
-	/*
-	  위 예제는 Executor 로 로직을 실행하고 complete 로 결과를 넘겨주는 것을 볼 수 있다. 이런 boilerplate 코드 없이 바로 CompletableFuture 를 만들 수 없을까?
-		runAsync, supplyAsync 메소드로 바로 연산 로직을 넣어줄 수 있다
-	 */
-	@Test
-	public void completedFutureTest2() throws Exception {
-		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
-		 
-		assertEquals("Hello", future.get());
-	}
+	
+	
 }

@@ -109,8 +109,9 @@ public class CompletableFuture2Test {
 	          try{Thread.sleep(1);} catch(Exception e){};
 	        },executor)
 	        .thenRun(()->System.out.println("World"));
-
+	      	     
 	      System.out.println("async request is ready.");
+	      try{Thread.sleep(10);} catch(Exception e){};
 	}
 	
 	/*

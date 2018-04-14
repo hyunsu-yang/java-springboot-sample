@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class CompletableFutureHowToCreateTest {
 	}
 	
 	/*
-	 CompletableFuture.completedFuture() 하지 않으면 계속 영원히 bloking 된다.
+	 CompletableFuture.completedFuture() 하지 않으면 계속 영원히 blocking 된다.
 	 */
 	@Test
 	public void completedFutureHello2Test() throws Exception {
@@ -58,11 +59,27 @@ public class CompletableFutureHowToCreateTest {
 	 */
 	@Test
 	public void completedFutureTest3() throws Exception {
-		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
-		 
-		assertEquals("Hello", future.get());
+		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+			try{TimeUnit.SECONDS.sleep(3);}catch (Exception e) {}
+			return "get";
+			});
+		 		
+		System.out.println(future.get(2, TimeUnit.SECONDS));
 	}
 	
+	@Test
+	public void completedFutureJoinTest() throws Exception {
+		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+			try{TimeUnit.SECONDS.sleep(3);}catch (Exception e) {}
+			return "join";
+			});
+		 
+		//TimeUnit.SECONDS.sleep(3);
+		
+		System.out.println(future.join());
+	}
+	
+		
 	
 	@Test
 	public void test() throws Exception {

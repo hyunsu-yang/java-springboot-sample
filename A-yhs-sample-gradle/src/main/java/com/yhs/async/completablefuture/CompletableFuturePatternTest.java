@@ -88,7 +88,7 @@ to.thenCombine(text, this::sendMsg);
 thenCombine은 2개의 비동기 계산을 먼저 처리한 결과로 BiFunction을 실행하도록 되어 있다.
  
  */
-public class CompletableFuture2Test {
+public class CompletableFuturePatternTest {
 
 	/*
 	 예제에서 확인되듯이 두개의 비동기 타스크가 자연스럽게 연결되었다. ( A완료시 B실행)
@@ -190,18 +190,22 @@ public class CompletableFuture2Test {
 	          try{Thread.sleep(1000);} catch(Exception ex){};
 	          System.out.println("cf2 supplyAsync on thread "+Thread.currentThread().getId()+" now="+(System.currentTimeMillis()-startTime));
 	          return 200;
-	        }).thenAccept(rtn -> System.out.println(rtn + 100));
+	        });
 
 	      CompletableFuture cf3= CompletableFuture.supplyAsync(() -> {
 	          try{Thread.sleep(3000);} catch(Exception ex){};
 	          System.out.println("cf3 supplyAsync on thread "+Thread.currentThread().getId()+" now="+(System.currentTimeMillis()-startTime));
 	          return 300;
-	        },e).thenAccept(rtn -> System.out.println(rtn + 100));
+	        },e);
 
 	      System.out.println("Task execution requested on thread " + Thread.currentThread().getId());	      
-	      cf3.thenComposeAsync(data1 -> cf2).thenComposeAsync(data2 -> cf1).join();
+	     
+	      // compose 하지 않으면 먼저 각 태스크 의 서로 결과의 완료를 기다리지 않는다.
+	      // cf3.thenComposeAsync(data1 -> cf2).thenComposeAsync(data2 -> cf1).join();
 
-	      System.out.println("final cf1.get() = " + cf1.get()+ " cf2.get()="+cf2.get()+" cf3.get()="+cf3.get()+" now="+(System.currentTimeMillis()-startTime));
+	     // System.out.println("final cf1.get() = " + cf1.get()+ " cf2.get()="+cf2.get()+" cf3.get()="+cf3.get()+" now="+(System.currentTimeMillis()-startTime));
+	      System.out.println("final  cf2.get()="+cf2.get());
+	      
 	}
 	
 	/*

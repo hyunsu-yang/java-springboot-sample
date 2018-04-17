@@ -1,4 +1,4 @@
-package com.yhs.stream.foreach;
+package com.yhs.stream;
 
 import java.util.Arrays;
 import java.util.List;
